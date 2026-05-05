@@ -11,7 +11,9 @@ export default async function AdminDashboard() {
   });
 
   const validatedQuotes = await prisma.quote.findMany({
-    where: { status: "VALIDATED" },
+    where: { 
+      status: { in: ["VALIDATED", "PAID"] } 
+    },
     select: { totalPrice: true }
   });
   
