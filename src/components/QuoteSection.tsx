@@ -33,10 +33,38 @@ type FormData = {
 };
 
 const PRODUCTS = [
-  { id: "tshirt", label: "T-Shirt", cmt: 9, moq: 50, grammages: ["Léger", "Standard", "Lourd (Heavy)"] },
-  { id: "hoodie", label: "Hoodie", cmt: 17, moq: 50, grammages: ["Standard", "Lourd", "Ultra Lourd"] },
-  { id: "veste", label: "Veste Zippée", cmt: 22, moq: 50, grammages: ["Léger", "Standard", "Lourd"] },
-  { id: "jogging", label: "Pantalon / Jogging", cmt: 16, moq: 50, grammages: ["Standard", "Lourd", "Ultra Lourd"] },
+  { 
+    id: "tshirt", label: "T-Shirt", cmt: 9, moq: 50, 
+    grammages: [
+      { label: "Léger", desc: "130-150 g/m²" }, 
+      { label: "Standard", desc: "160-200 g/m²" }, 
+      { label: "Lourd (Heavy)", desc: "210-250 g/m²" }
+    ] 
+  },
+  { 
+    id: "hoodie", label: "Hoodie", cmt: 17, moq: 50, 
+    grammages: [
+      { label: "Standard", desc: "300-350 g/m²" }, 
+      { label: "Lourd", desc: "400-450 g/m²" }, 
+      { label: "Ultra Lourd", desc: "500-600 g/m²" }
+    ] 
+  },
+  { 
+    id: "veste", label: "Veste Zippée", cmt: 22, moq: 50, 
+    grammages: [
+      { label: "Léger", desc: "250-280 g/m²" }, 
+      { label: "Standard", desc: "300-350 g/m²" }, 
+      { label: "Lourd", desc: "400-450 g/m²" }
+    ] 
+  },
+  { 
+    id: "jogging", label: "Pantalon / Jogging", cmt: 16, moq: 50, 
+    grammages: [
+      { label: "Standard", desc: "300-350 g/m²" }, 
+      { label: "Lourd", desc: "400-450 g/m²" }, 
+      { label: "Ultra Lourd", desc: "500-600 g/m²" }
+    ] 
+  },
 ];
 
 const MATERIALS = [
@@ -359,14 +387,15 @@ export default function QuoteSection() {
                     <div role="radiogroup" className={styles.optionGrid}>
                       {selectedProductData?.grammages.map((g) => (
                         <button
-                          key={g}
+                          key={g.label}
                           type="button"
                           role="radio"
-                          aria-checked={form.grammage === g}
-                          className={`${styles.optionCard} ${form.grammage === g ? styles.optionSelected : ""}`}
-                          onClick={() => updateForm("grammage", g)}
+                          aria-checked={form.grammage === g.label}
+                          className={`${styles.optionCard} ${form.grammage === g.label ? styles.optionSelected : ""}`}
+                          onClick={() => updateForm("grammage", g.label)}
                         >
-                          <span className={styles.optionLabel}>{g}</span>
+                          <span className={styles.optionLabel}>{g.label}</span>
+                          <span className={styles.optionHint}>{g.desc}</span>
                         </button>
                       ))}
                     </div>
