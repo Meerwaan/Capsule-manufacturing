@@ -34,7 +34,7 @@ export default async function ClientQuoteDetailPage({ params }: { params: Promis
           <ArrowLeft size={16} /> Retour aux devis
         </Link>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
             <h1 className={styles.pageTitle} style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>Devis #{quote.id.toString().padStart(4, '0')}</h1>
             <p className={styles.pageDescription}>Émis le {quote.createdAt.toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
@@ -43,7 +43,7 @@ export default async function ClientQuoteDetailPage({ params }: { params: Promis
             quote.status === "PENDING" ? styles.badgePending : 
             quote.status === "PRICED" ? styles.badgePriced : 
             (quote.status === "PAID" || quote.status === "VALIDATED") ? styles.badgePaid : ''
-          }`} style={{ fontSize: 'var(--text-xs)', padding: 'var(--space-2) var(--space-4)' }}>
+          }`} style={{ fontSize: 'var(--text-xs)', padding: 'var(--space-2) var(--space-4)', alignSelf: 'center' }}>
             {quote.status}
           </span>
         </div>
@@ -112,17 +112,17 @@ export default async function ClientQuoteDetailPage({ params }: { params: Promis
               <div>
                 <div className={styles.invoiceRow}>
                   <span style={{ color: 'var(--color-charcoal-300)', fontSize: 'var(--text-sm)' }}>Confection (x{quote.quantity})</span>
-                  <span style={{ color: 'var(--color-white)', fontFamily: 'monospace' }}>{quote.unitPrice?.toFixed(2)} € /u</span>
+                  <span style={{ color: 'var(--color-white)', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{quote.unitPrice?.toFixed(2)} € /u</span>
                 </div>
                 
                 <div className={styles.invoiceRow}>
                   <span style={{ color: 'var(--color-charcoal-300)', fontSize: 'var(--text-sm)' }}>Frais techniques (Moules, etc.)</span>
-                  <span style={{ color: 'var(--color-white)', fontFamily: 'monospace' }}>{quote.setupFees?.toFixed(2) || "0.00"} €</span>
+                  <span style={{ color: 'var(--color-white)', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{quote.setupFees?.toFixed(2) || "0.00"} €</span>
                 </div>
 
-                <div className={styles.invoiceTotal}>
-                  <span style={{ color: 'var(--color-gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: 'var(--text-xs)' }}>Total Estimé HT</span>
-                  <span style={{ color: 'var(--color-white)', fontWeight: 700, fontSize: '2rem', fontFamily: 'monospace', letterSpacing: '-0.02em' }}>
+                <div className={styles.invoiceTotal} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', gap: 'var(--space-4)' }}>
+                  <span style={{ color: 'var(--color-gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: 'var(--text-xs)', whiteSpace: 'nowrap' }}>Total Estimé HT</span>
+                  <span style={{ color: 'var(--color-white)', fontWeight: 700, fontSize: '1.8rem', fontFamily: 'monospace', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
                     {quote.totalPrice?.toFixed(2)} €
                   </span>
                 </div>

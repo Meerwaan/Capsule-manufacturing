@@ -6,8 +6,8 @@
   min-height: 100vh;
   background-color: var(--color-charcoal-900);
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(196, 163, 90, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+    radial-gradient(circle at 15% 50%, rgba(196, 163, 90, 0.015) 0%, transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.01) 0%, transparent 40%);
   color: var(--color-white);
   font-family: var(--font-sans);
 }
@@ -171,6 +171,7 @@
   font-weight: 700;
   background: linear-gradient(90deg, #fff, var(--color-charcoal-300));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -208,6 +209,7 @@
   padding: 1px;
   background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0.5;

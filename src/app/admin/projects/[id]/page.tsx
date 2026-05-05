@@ -74,6 +74,34 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <ProjectTracker projectId={project.id} currentStatus={project.status} />
         </section>
         
+        {/* Logistique & Expédition */}
+        <section className={styles.panel}>
+          <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-300)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            Logistique & Livraison
+          </h3>
+          {project.shipments && project.shipments.length > 0 ? (
+            <>
+              <div className={styles.infoGroup}>
+                <p className={styles.infoLabel}>Adresse de Livraison</p>
+                <p className={styles.infoValue} style={{ whiteSpace: 'pre-line', lineHeight: 1.5, backgroundColor: 'var(--color-charcoal-800)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', marginTop: 'var(--space-2)' }}>
+                  {project.shipments[0].address || "Aucune adresse renseignée"}
+                </p>
+              </div>
+              
+              <div style={{ marginTop: 'var(--space-6)' }}>
+                <Link href={`/admin/projects/${project.id}/delivery-slip`} target="_blank" className={styles.primaryButton} style={{ width: '100%', display: 'flex', justifyContent: 'center', textDecoration: 'none', background: 'var(--color-gold)', color: 'var(--color-charcoal-900)' }}>
+                  📄 Générer le Bon de Livraison (PDF)
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Adresse de Livraison</p>
+              <p className={styles.infoValue} style={{ color: 'var(--color-charcoal-400)', fontStyle: 'italic' }}>En attente de saisie par le client.</p>
+            </div>
+          )}
+        </section>
+
         {/* Contact Client */}
         <section className={styles.panel}>
           <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-300)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact Client</h3>
@@ -84,11 +112,6 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <div className={styles.infoGroup}>
             <p className={styles.infoLabel}>Email</p>
             <p className={styles.infoValue}>{project.user.email}</p>
-          </div>
-          <div style={{ marginTop: 'var(--space-4)' }}>
-            <button className={styles.actionButton} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              Envoyer un message au client
-            </button>
           </div>
         </section>
       </div>

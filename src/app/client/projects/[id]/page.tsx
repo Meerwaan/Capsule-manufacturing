@@ -47,7 +47,7 @@ export default async function ClientProjectDetailPage({ params }: { params: Prom
           <ArrowLeft size={16} /> Retour aux productions
         </Link>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
             <h1 className={styles.pageTitle} style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>
               Collection <strong style={{ letterSpacing: '0.05em' }}>{project.reference}</strong>
@@ -57,7 +57,7 @@ export default async function ClientProjectDetailPage({ params }: { params: Prom
             </p>
           </div>
           
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', alignSelf: 'center' }}>
             <span className={`${styles.badge} ${project.status === 'DELIVERED' ? styles.badgePaid : styles.badgeActive}`} style={{ padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-xs)' }}>
               {project.status.replace(/_/g, ' ')}
             </span>
