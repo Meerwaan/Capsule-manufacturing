@@ -38,7 +38,7 @@ Ce document récapitule les étapes techniques et fonctionnelles accomplies et c
 *Objectif : Remplacer la simulation actuelle par de vrais envois d'emails.*
 
 - [ ] **Configuration Provider** : Brancher Resend ou un serveur SMTP.
-- [ ] **Emails Transactionnels** : 
+- [ ] **Emails Transactionnels** :
   - Envoi du Magic Link de connexion.
   - Alerte Admin : "Nouveau devis reçu".
   - Alerte Client : "Votre devis a été validé par l'atelier".
