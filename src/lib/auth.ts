@@ -48,7 +48,10 @@ export const authOptions: NextAuthOptions = {
               });
             }
             console.log("Connexion admin réussie pour:", user.email);
-            return user;
+            return {
+              ...user,
+              id: user.id.toString(),
+            };
           } catch (error) {
             console.error("Erreur Prisma lors de la connexion admin:", error);
             throw new Error("Erreur base de données");
