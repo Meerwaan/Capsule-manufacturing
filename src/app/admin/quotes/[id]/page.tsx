@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "../../admin.module.css";
+import QuotePricingForm from "@/components/admin/QuotePricingForm";
 
 export default async function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -23,11 +24,10 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
             ← Retour aux devis
           </Link>
           <h2 className={styles.pageTitle}>{quote.brandName}</h2>
-          <p className={styles.pageDescription}>Dossier technique reçu le {quote.createdAt.toLocaleDateString("fr-FR")}</p>
-        </div>
-        <div className={styles.headerActions}>
-          <button className={styles.btnRefuse}>Refuser</button>
-          <button className={styles.btnValidate}>Valider & Lancer Production</button>
+          <p className={styles.pageDescription}>
+            Dossier technique reçu le {quote.createdAt.toLocaleDateString("fr-FR")} 
+            — Statut actuel: <span style={{ fontWeight: 600, color: quote.status === 'VALIDATED' ? 'var(--color-success)' : 'var(--color-gold)' }}>{quote.status}</span>
+          </p>
         </div>
       </header>
 
@@ -49,8 +49,21 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           </div>
         </section>
 
+        {/* Chiffrage & Décision */}
+        <section className={styles.panel} style={{ gridRow: 'span 2' }}>
+          <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottomColor: 'var(--color-charcoal-700)' }}>Chiffrage & Décision</h3>
+          <QuotePricingForm 
+            quoteId={quote.id}
+            initialUnitPrice={quote.unitPrice}
+            initialSetupFees={quote.setupFees}
+            initialLeadTime={quote.leadTime}
+            quantity={quote.quantity}
+            status={quote.status}
+          />
+        </section>
+
         {/* Info Produit */}
-        <section className={styles.panel} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
+        <section className={styles.panel} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
           <div style={{ gridColumn: '1 / -1' }}>
             <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-300)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Spécifications Confection</h3>
           </div>
@@ -70,11 +83,37 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
             <p className={styles.infoLabel}>Marquage</p>
             <p className={styles.infoValue}>{quote.branding} ({quote.brandingLocations} loc.)</p>
           </div>
+          <div className={styles.infoGroup}>
+            <p className={styles.infoLabel}>Neck Label</p>
+            <p className={styles.infoValue}>{quote.neckLabel === "yes" ? "Oui" : "Non"}</p>
+          </div>
+          <div className={styles.infoGroup}>
+            <p className={styles.infoLabel}>Hangtag (Étiquette cartonnée)</p>
+            <p className={styles.infoValue}>{quote.hangtag === "yes" ? "Oui" : "Non"}</p>
+          </div>
+          <div className={styles.infoGroup}>
+            <p className={styles.infoLabel}>Emballage (Packaging)</p>
+            <p className={styles.infoValue}>{quote.packaging === "yes" ? "Polybag individuel" : "Standard"}</p>
+          </div>
         </section>
 
-        {/* Fichiers */}
-        <section className={styles.panel} style={{ gridColumn: '1 / -1' }}>
-          <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-300)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dossier Technique & Fichiers</h3>
+        {/* Conception & Fichiers */}
+        <section className={styles.panel} style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <h3 className={styles.panelTitle} style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-300)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Conception & Fichiers Techniques</h3>
+          </div>
+          
+          <div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Patron fourni par le client ?</p>
+              <p className={styles.infoValue}>{quote.hasPatron === "yes" ? "Oui" : "Non (À créer par l'usine)"}</p>
+            </div>
+            <div className={styles.infoGroup}>
+              <p className={styles.infoLabel}>Demande de prototype ?</p>
+              <p className={styles.infoValue}>{quote.wantsPrototype === "yes" ? "Oui (Fortement recommandé)" : "Non (Validation sur photo)"}</p>
+            </div>
+          </div>
+
           <div>
             {quote.schemaFile ? (
               <a href={`/api/admin/download?file=${quote.schemaFile}`} className={styles.fileLink}>
@@ -90,7 +129,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
                 <span className={styles.fileAction}>Télécharger ↓</span>
               </a>
             ) : (
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-500)', fontStyle: 'italic' }}>Aucun patron fourni.</p>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-charcoal-500)', fontStyle: 'italic' }}>Aucun fichier de patron ou graphisme fourni.</p>
             )}
           </div>
         </section>
