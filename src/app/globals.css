@@ -199,12 +199,24 @@ ul, ol { list-style: none; }
   text-transform: uppercase;
 }
 
+/* Heading level text wrap to prevent orphans */
+.text-display,
+.text-headline,
+.text-title {
+  text-wrap: balance;
+}
+
 .text-body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   font-weight: 300;
   line-height: 1.7;
   color: var(--text-secondary);
+}
+
+/* Tabular numerals utility */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ==========================================================================
@@ -238,6 +250,19 @@ ul, ol { list-style: none; }
    5. Buttons
    ========================================================================== */
 
+/* Anchor scroll targets — account for fixed navbar */
+section[id] {
+  scroll-margin-top: var(--navbar-height, 80px);
+}
+
+/* Touch: prevent 300ms double-tap delay on interactive elements */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -258,6 +283,8 @@ ul, ol { list-style: none; }
   cursor: pointer;
   white-space: nowrap;
   min-height: 48px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:active {

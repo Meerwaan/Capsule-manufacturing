@@ -315,12 +315,13 @@ export default function QuoteSection() {
                       <input
                         type="text"
                         id="brand-name"
+                        name="brandName"
                         className={styles.input}
                         value={form.brandName}
                         onChange={(e) => updateForm("brandName", e.target.value)}
                         required
                         autoComplete="organization"
-                        placeholder="Ex : Brand Studio"
+                        placeholder="Ex : Brand Studio…"
                       />
                     </div>
                     <div className={styles.field}>
@@ -328,12 +329,13 @@ export default function QuoteSection() {
                       <input
                         type="text"
                         id="contact-name"
+                        name="contactName"
                         className={styles.input}
                         value={form.contactName}
                         onChange={(e) => updateForm("contactName", e.target.value)}
                         required
                         autoComplete="name"
-                        placeholder="Jean Dupont"
+                        placeholder="Jean Dupont…"
                       />
                     </div>
                     <div className={styles.field}>
@@ -341,12 +343,14 @@ export default function QuoteSection() {
                       <input
                         type="email"
                         id="email"
+                        name="email"
                         className={styles.input}
                         value={form.email}
                         onChange={(e) => updateForm("email", e.target.value)}
                         required
                         autoComplete="email"
-                        placeholder="jean@brand.com"
+                        spellCheck={false}
+                        placeholder="jean@brand.com…"
                       />
                     </div>
                     <div className={styles.field}>
@@ -354,12 +358,13 @@ export default function QuoteSection() {
                       <input
                         type="tel"
                         id="phone"
+                        name="phone"
                         className={styles.input}
                         value={form.phone}
                         onChange={(e) => updateForm("phone", e.target.value)}
                         required
                         autoComplete="tel"
-                        placeholder="+33 6 00 00 00 00"
+                        placeholder="+33 6 00 00 00 00…"
                       />
                       <p className={styles.fieldHelper}>Notre équipe vous rappellera à ce numéro</p>
                     </div>

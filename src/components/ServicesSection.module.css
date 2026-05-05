@@ -1,5 +1,6 @@
 .section {
   background-color: var(--bg-primary, #FAFAF8);
+  scroll-margin-top: var(--navbar-height, 80px);
 }
 
 .header {
@@ -16,6 +17,7 @@
 .title {
   margin-bottom: var(--space-6, 1.5rem);
   color: var(--text-primary);
+  text-wrap: balance;
 }
 
 .accent {
@@ -52,7 +54,8 @@
   transition:
     box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 300ms ease;
+    border-color 300ms ease,
+    background-color 300ms ease;
 }
 
 .card:hover {
@@ -87,11 +90,20 @@
   border-radius: 0 0 var(--radius-sm, 4px) var(--radius-sm, 4px);
 }
 
-/* Emoji */
-.cardEmoji {
-  font-size: 2rem;
-  line-height: 1;
-  filter: grayscale(0.3);
+/* SVG Icon */
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-charcoal-500, #5A5A55);
+  opacity: 0.6;
+}
+
+.cardFeatured .cardIcon {
+  color: var(--color-gold, #C4A35A);
+  opacity: 1;
 }
 
 .cardHeader {
@@ -192,8 +204,14 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: opacity 200ms ease;
+  touch-action: manipulation;
 }
 
 .noteLink:hover {
   opacity: 0.7;
+}
+
+/* tabular-nums for numeric values */
+.tabularNums {
+  font-variant-numeric: tabular-nums;
 }

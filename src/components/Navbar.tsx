@@ -40,8 +40,8 @@ export default function Navbar() {
       <div className={styles.inner}>
         {/* Logo */}
         <Link ref={logoRef} href="/" className={styles.logo} aria-label="Capsule - Accueil">
-          <span className={styles.logoText}>CAPSULE</span>
-          <span className={styles.logoSub}>Tunisia</span>
+          <span className={styles.logoText} translate="no">CAPSULE</span>
+          <span className={styles.logoSub} translate="no">Tunisia</span>
         </Link>
 
         {/* Links */}

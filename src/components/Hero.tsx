@@ -76,7 +76,7 @@ export default function Hero() {
               y: "-20%",
               ease: "none",
               scrollTrigger: {
-                trigger: ".hero-section",
+                trigger: containerRef.current,
                 start: "top top",
                 end: "bottom top",
                 scrub: true,

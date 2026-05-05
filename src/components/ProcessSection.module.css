@@ -1,0 +1,189 @@
+.section {
+  background-color: var(--bg-primary, #FAFAF8);
+  scroll-margin-top: var(--navbar-height, 80px);
+}
+
+.header {
+  max-width: 640px;
+  margin-bottom: var(--space-16, 4rem);
+}
+
+.eyebrow {
+  color: var(--color-gold, #C4A35A);
+  display: block;
+  margin-bottom: var(--space-4, 1rem);
+}
+
+.title {
+  margin-bottom: var(--space-4, 1rem);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.accent {
+  font-style: italic;
+  color: var(--color-gold, #C4A35A);
+}
+
+.subtitle {
+  max-width: 52ch;
+}
+
+/* Layout: steps + CTA card */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-16, 4rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr 380px;
+    gap: var(--space-24, 6rem);
+  }
+}
+
+/* Steps */
+.steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Animated vertical line */
+.line {
+  position: absolute;
+  left: 19px;
+  top: 20px;
+  bottom: 20px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-gold, #C4A35A),
+    rgba(196, 163, 90, 0.15)
+  );
+  z-index: 0;
+}
+
+.step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-6, 1.5rem);
+  padding-bottom: var(--space-10, 2.5rem);
+}
+
+.step:last-child {
+  padding-bottom: 0;
+}
+
+/* Step number bubble */
+.stepNum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stepNumText {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-white, #FFF);
+  border: 1px solid var(--border-subtle, #D8D8D2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif, 'Cormorant Garamond', serif);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-gold, #C4A35A);
+  flex-shrink: 0;
+}
+
+.stepConnector {
+  width: 1px;
+  flex: 1;
+  background: transparent;
+}
+
+/* Step content */
+.stepContent {
+  padding-top: var(--space-2, 0.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+.stepIconWrap {
+  color: var(--color-charcoal-300, #9A9A94);
+  margin-bottom: var(--space-1, 0.25rem);
+}
+
+.stepTitle {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-base, 1rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.stepBody {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 44ch;
+}
+
+/* CTA Card */
+.ctaCard {
+  background: var(--color-charcoal-900, #111110);
+  border-radius: var(--radius-lg, 16px);
+  padding: var(--space-10, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6, 1.5rem);
+  position: sticky;
+  top: calc(var(--navbar-height, 80px) + var(--space-6, 1.5rem));
+}
+
+.ctaEyebrow {
+  color: var(--color-gold, #C4A35A);
+  display: block;
+}
+
+.ctaTitle {
+  font-family: var(--font-serif, 'Cormorant Garamond', serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-parchment, #F5F2EC);
+  line-height: 1.35;
+}
+
+.ctaChecks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+}
+
+.ctaCheck {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 300;
+  color: rgba(245, 242, 236, 0.65);
+}
+
+.ctaCheck svg {
+  color: var(--color-gold, #C4A35A);
+  flex-shrink: 0;
+}

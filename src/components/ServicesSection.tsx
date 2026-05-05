@@ -8,24 +8,57 @@ import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// SVG icons — no emojis (ui-ux-pro-max: no-emoji-icons)
+function IconTshirt() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+      <path d="M4 8l6-4h12l6 4-4 4v14H8V12L4 8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M10 4c0 3.314 2.686 5 6 5s6-1.686 6-5" stroke="currentColor" strokeWidth="1.5"/>
+    </svg>
+  );
+}
+
+function IconHoodie() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+      <path d="M4 9l5-5h1c0 3.866 2.686 6 6 6s6-2.134 6-6h1l5 5-3 5H6L4 9z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M4 9v17h24V9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M14 10v16M18 10v16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function IconJacket() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+      <path d="M4 9l5-5h1c0 3.866 2.686 6 6 6s6-2.134 6-6h1l5 5-3 5H6L4 9z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M4 9v17h24V9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M16 10v16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="16" cy="14" r="1" fill="currentColor"/>
+      <circle cx="16" cy="18" r="1" fill="currentColor"/>
+      <circle cx="16" cy="22" r="1" fill="currentColor"/>
+    </svg>
+  );
+}
+
 const PRODUCTS = [
   {
     id: "tshirt",
     name: "T-Shirt",
     category: "Maille circulaire",
     moq: "50",
-    delay: "2–3 semaines",
+    delay: "2–3 sem.",
     features: ["Col rond ou V", "Manches courtes / longues", "Coupe regular ou oversized", "100% coton, recyclé ou mix"],
-    image: "👕",
+    Icon: IconTshirt,
   },
   {
     id: "hoodie",
     name: "Hoodie",
     category: "Molleton",
     moq: "50",
-    delay: "3–4 semaines",
-    features: ["Capuche simple ou double", "Poche kangourou", "Col zippé ou pull", "Grammage 280–400g/m²"],
-    image: "🧥",
+    delay: "3–4 sem.",
+    features: ["Capuche simple ou double", "Poche kangourou", "Col zippé ou pull", "Grammage 280–400\u202fg/m²"],
+    Icon: IconHoodie,
     featured: true,
   },
   {
@@ -33,9 +66,9 @@ const PRODUCTS = [
     name: "Veste Zippée",
     category: "Maille / Tissu",
     moq: "50",
-    delay: "3–4 semaines",
+    delay: "3–4 sem.",
     features: ["Zip YKK premium", "Poches latérales", "Intérieur sherpa optionnel", "Coupe bomber ou classique"],
-    image: "🧣",
+    Icon: IconJacket,
   },
 ];
 
@@ -91,7 +124,10 @@ export default function ServicesSection() {
               {product.featured && (
                 <div className={styles.badge}>Plus populaire</div>
               )}
-              <div className={styles.cardEmoji} aria-hidden="true">{product.image}</div>
+              {/* SVG icon replaces emoji */}
+              <div className={styles.cardIcon}>
+                <product.Icon />
+              </div>
               <div className={styles.cardHeader}>
                 <p className={`text-label ${styles.category}`}>{product.category}</p>
                 <h3 className={styles.productName}>{product.name}</h3>
@@ -106,17 +142,19 @@ export default function ServicesSection() {
               </ul>
               <div className={styles.meta}>
                 <div className={styles.metaItem}>
-                  <span className={styles.metaValue}>{product.moq} pcs</span>
+                  {/* tabular-nums for numeric columns */}
+                  <span className={`${styles.metaValue} ${styles.tabularNums}`}>{product.moq}&nbsp;pcs</span>
                   <span className={styles.metaKey}>Minimum</span>
                 </div>
                 <div className={styles.metaDivider} aria-hidden="true" />
                 <div className={styles.metaItem}>
-                  <span className={styles.metaValue}>{product.delay}</span>
+                  <span className={`${styles.metaValue} ${styles.tabularNums}`}>{product.delay}</span>
                   <span className={styles.metaKey}>Production</span>
                 </div>
               </div>
+              {/* Fixed href: just #devis, product pre-selection handled by URL search param */}
               <Link
-                href={`#devis?product=${product.id}`}
+                href={`#devis`}
                 className={`btn ${product.featured ? "btn-primary" : "btn-outline"}`}
                 id={`cta-${product.id}`}
               >
