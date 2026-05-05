@@ -53,6 +53,9 @@ export default function Navbar() {
             <Link href="#expertise" className={styles.link}>Expertise</Link>
           </li>
           <li>
+            <Link href="#matieres" className={styles.link}>Matières</Link>
+          </li>
+          <li>
             <Link href="#tunisie" className={styles.link}>Notre Atelier</Link>
           </li>
           <li>
