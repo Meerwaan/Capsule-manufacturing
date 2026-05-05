@@ -35,6 +35,7 @@ type FormData = {
 const PRODUCTS = [
   { 
     id: "tshirt", label: "T-Shirt", cmt: 9, moq: 50, 
+    allowedMaterials: ["jersey", "interlock"],
     grammages: [
       { label: "Léger", desc: "130-150 g/m²" }, 
       { label: "Standard", desc: "160-200 g/m²" }, 
@@ -43,6 +44,7 @@ const PRODUCTS = [
   },
   { 
     id: "hoodie", label: "Hoodie", cmt: 17, moq: 50, 
+    allowedMaterials: ["molleton", "interlock", "velours"],
     grammages: [
       { label: "Standard", desc: "300-350 g/m²" }, 
       { label: "Lourd", desc: "400-450 g/m²" }, 
@@ -51,6 +53,7 @@ const PRODUCTS = [
   },
   { 
     id: "veste", label: "Veste Zippée", cmt: 22, moq: 50, 
+    allowedMaterials: ["molleton", "ripstop", "velours", "denim"],
     grammages: [
       { label: "Léger", desc: "250-280 g/m²" }, 
       { label: "Standard", desc: "300-350 g/m²" }, 
@@ -59,6 +62,7 @@ const PRODUCTS = [
   },
   { 
     id: "jogging", label: "Pantalon / Jogging", cmt: 16, moq: 50, 
+    allowedMaterials: ["molleton", "ripstop", "velours"],
     grammages: [
       { label: "Standard", desc: "300-350 g/m²" }, 
       { label: "Lourd", desc: "400-450 g/m²" }, 
@@ -178,6 +182,7 @@ export default function QuoteSection() {
       if (key === "product") {
         const prod = PRODUCTS.find(p => p.id === value);
         if (prod && next.quantity < prod.moq) next.quantity = prod.moq;
+        next.materialType = ""; // Reset material
         next.grammage = ""; // Reset grammage
       }
       return next;
@@ -366,7 +371,7 @@ export default function QuoteSection() {
                   <div className={styles.field}>
                     <p className={styles.fieldLabel}>Type de matière</p>
                     <div role="radiogroup" className={styles.optionGrid}>
-                      {MATERIALS.map((m) => (
+                      {MATERIALS.filter(m => selectedProductData?.allowedMaterials?.includes(m.id)).map((m) => (
                         <button
                           key={m.id}
                           type="button"
