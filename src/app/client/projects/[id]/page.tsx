@@ -6,6 +6,8 @@ import { authOptions } from "@/lib/auth";
 import styles from "../../client.module.css";
 import { ArrowLeft, Check, Clock, PackageCheck } from "lucide-react";
 
+import ShippingAddressForm from "@/components/client/ShippingAddressForm";
+
 const STATUSES = [
   { value: "QUOTE_VALIDATED", label: "Commande Validée", desc: "La commande est officiellement enregistrée." },
   { value: "AWAITING_MATERIAL", label: "Préparation des matières", desc: "En attente de réception des tissus ou accessoires." },
@@ -30,6 +32,7 @@ export default async function ClientProjectDetailPage({ params }: { params: Prom
 
   const project = await prisma.project.findUnique({
     where: { id: projectId },
+    include: { shipments: true }
   });
 
   if (!project) notFound();
@@ -64,6 +67,12 @@ export default async function ClientProjectDetailPage({ params }: { params: Prom
           </div>
         </div>
       </div>
+      
+      <ShippingAddressForm 
+        projectId={project.id} 
+        initialAddress={project.shipments && project.shipments.length > 0 ? project.shipments[0].address : null} 
+        isEditable={project.status !== "SHIPPED" && project.status !== "DELIVERED"} 
+      />
 
       <div className={styles.card} style={{ padding: 'var(--space-10)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-10)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 'var(--space-4)' }}>

@@ -14,7 +14,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     where: { id: projectId },
     include: {
       user: true,
-      quote: true
+      quote: true,
+      shipments: true
     }
   });
 
