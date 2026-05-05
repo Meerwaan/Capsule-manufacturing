@@ -236,8 +236,9 @@ export default function QuoteSection() {
             <div className={styles.successIcon} aria-hidden="true">✓</div>
             <h3 className={styles.successTitle}>Dossier reçu !</h3>
             <p className={styles.successBody}>
-              Merci <strong>{form.contactName}</strong>. Notre bureau d&apos;études 
-              analyse vos pièces. Vous recevrez un devis validé sous 24h.
+              Merci <strong>{form.contactName}</strong>. Votre dossier de production est entre les mains de nos experts. 
+              Nous reviendrons vers vous sous 24h pour valider les spécificités techniques et 
+              finaliser le devis avec vous avant règlement.
             </p>
             <button
               className="btn btn-outline"

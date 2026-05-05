@@ -8,11 +8,11 @@ Ce document récapitule les étapes techniques et fonctionnelles nécessaires po
 
 *Objectif : Ne perdre aucune demande de devis et commencer à construire la base de données client.*
 
-- [ ] **API Devis** : Créer une route API (`/api/quote`) pour enregistrer les données du formulaire 6 étapes dans Prisma.
+- [x] **API Devis** : Créer une route API (`/api/quote`) pour enregistrer les données du formulaire 6 étapes dans Prisma.
 - [ ] **Validation Email** : Mettre en place un système d'envoi d'email automatique :
   - Au client : "Nous avons bien reçu votre dossier technique".
   - À l'admin : "Nouveau devis à chiffrer".
-- [ ] **Gestion des Fichiers** : Configurer un stockage (ex: Uploadthing ou local) pour les Tech Packs et Patrons envoyés via le formulaire.
+- [x] **Gestion des Fichiers** : Configurer un stockage (ex: Uploadthing ou local) pour les Tech Packs et Patrons envoyés via le formulaire. (Sécurisé en dossier privé)
 
 ## 📦 2. Espace Client (Dashboard V1)
 
@@ -50,4 +50,4 @@ Ce document récapitule les étapes techniques et fonctionnelles nécessaires po
 ---
 
 > [!TIP]
-> **Prochaine étape suggérée** : Commencer par l'**API Devis** pour rendre le formulaire fonctionnel immédiatement et commencer à stocker des données réelles dans `prisma/schema.prisma`.
+> **Prochaine étape suggérée** : Mettre en place l'**Authentification (Next-Auth)** et les **Notifications Email** (Resend) pour que tu sois alerté dès qu'un devis tombe et que tes clients puissent suivre leur projet.
