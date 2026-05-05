@@ -3,9 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "../../admin.module.css";
 
-export default async function QuoteDetailPage({ params }: { params: { id: string } }) {
+export default async function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const quoteId = parseInt(resolvedParams.id);
+  
+  if (isNaN(quoteId)) notFound();
+
   const quote = await prisma.quote.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: quoteId },
   });
 
   if (!quote) notFound();
