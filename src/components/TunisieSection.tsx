@@ -99,8 +99,8 @@ export default function TunisieSection() {
           <span className={`tunisie-line ${styles.line}`} aria-hidden="true" />
           <p className={`text-body ${styles.subtitle}`}>
             Choisir la Tunisie, c&apos;est choisir la proximité, la réactivité et un
-            savoir-faire reconnu dans le monde entier. C&apos;est aussi réduire votre
-            empreinte carbone par rapport à la production asiatique.
+            savoir-faire reconnu dans le monde entier. Nos partenaires industriels 
+            respectent les normes environnementales et sociales les plus strictes.
           </p>
         </div>
 

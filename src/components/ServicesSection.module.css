@@ -40,12 +40,12 @@
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
-    /* Force all cards to same height via 1fr row */
     grid-auto-rows: 1fr;
+    align-items: stretch;
   }
 }
 
-/* Card — ALL cards reserve same badge slot at top for equal height */
+/* Card — Forced to fill the grid item space */
 .card {
   position: relative;
   background: var(--color-white, #FFF);
@@ -55,8 +55,6 @@
   padding-top: calc(var(--space-8, 2rem) + 28px);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6, 1.5rem);
-  /* Fill the grid-auto-rows: 1fr area completely */
   height: 100%;
   box-sizing: border-box;
   transition:
@@ -122,11 +120,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1, 0.25rem);
+  margin-top: var(--space-4, 1rem);
 }
 
 .category {
   color: var(--text-muted, #9A9A94);
   font-size: 0.7rem;
+  min-height: 1.2rem;
+  display: flex;
+  align-items: center;
 }
 
 .productName {
@@ -134,7 +136,10 @@
   font-size: 2rem;
   font-weight: 400;
   color: var(--text-primary);
-  line-height: 1;
+  line-height: 1.1;
+  min-height: 2.2em; /* Reserve space for 2 lines */
+  display: flex;
+  align-items: center;
 }
 
 /* Features */
@@ -143,6 +148,7 @@
   flex-direction: column;
   gap: var(--space-2, 0.5rem);
   flex: 1;
+  margin-top: var(--space-6, 1.5rem);
 }
 
 .feature {
@@ -170,6 +176,7 @@
   padding: var(--space-4, 1rem) 0;
   border-top: 1px solid var(--border-subtle, #D8D8D2);
   border-bottom: 1px solid var(--border-subtle, #D8D8D2);
+  margin-top: var(--space-6, 1.5rem);
 }
 
 .metaItem {
@@ -224,6 +231,7 @@
 }
 
 /* tabular-nums for numeric values */
-.tabularNums {
-  font-variant-numeric: tabular-nums;
+.cta {
+  margin-top: var(--space-6, 1.5rem);
+  width: 100%;
 }

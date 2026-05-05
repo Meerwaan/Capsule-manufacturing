@@ -7,24 +7,31 @@ import styles from "./QuoteSection.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 type FormData = {
   product: string;
   complexity: string;
   material: string;
+  grammage: string;
   quantity: number;
+  hasPatron: string; // 'yes' | 'no' (factory needed)
   brandName: string;
   contactName: string;
   email: string;
   phone: string;
   notes: string;
+  files: {
+    patron?: string;
+    schema?: string;
+    techPack?: string;
+  };
 };
 
 const PRODUCTS = [
-  { id: "tshirt", label: "T-Shirt", pricePerUnit: 8 },
-  { id: "hoodie", label: "Hoodie", pricePerUnit: 14 },
-  { id: "veste", label: "Veste Zippée", pricePerUnit: 18 },
+  { id: "tshirt", label: "T-Shirt", pricePerUnit: 8, grammages: ["160g", "180g", "220g (Premium)", "240g (Heavy)"] },
+  { id: "hoodie", label: "Hoodie", pricePerUnit: 14, grammages: ["280g", "320g", "400g (Heavy)", "450g (Ultra)"] },
+  { id: "veste", label: "Veste Zippée", pricePerUnit: 18, grammages: ["280g", "320g", "400g", "Softshell"] },
 ];
 
 const COMPLEXITIES = [
@@ -42,17 +49,26 @@ const MATERIALS = [
 
 const QUANTITY_STEPS = [50, 100, 250, 500, 1000];
 
-function getEstimate(data: FormData): { unitPrice: number; total: number } | null {
+function getEstimate(data: FormData): { unitPrice: number; total: number; serviceFees: number } | null {
   const prod = PRODUCTS.find((p) => p.id === data.product);
   const comp = COMPLEXITIES.find((c) => c.id === data.complexity);
   if (!prod || !comp || data.quantity < 50) return null;
 
   const qty = data.quantity;
   const volumeDiscount = qty >= 500 ? 0.85 : qty >= 250 ? 0.9 : qty >= 100 ? 0.95 : 1;
-  const unitPrice = parseFloat((prod.pricePerUnit * comp.multiplier * volumeDiscount).toFixed(2));
-  const total = parseFloat((unitPrice * qty).toFixed(2));
+  
+  // Grammage impact (simple logic)
+  let grammageMultiplier = 1;
+  if (data.grammage.includes("Heavy") || data.grammage.includes("Ultra")) grammageMultiplier = 1.15;
 
-  return { unitPrice, total };
+  const unitPrice = parseFloat((prod.pricePerUnit * comp.multiplier * volumeDiscount * grammageMultiplier).toFixed(2));
+  
+  // Service fees: Pattern creation if not provided
+  const serviceFees = data.hasPatron === "no" ? 150 : 0;
+  
+  const total = parseFloat((unitPrice * qty + serviceFees).toFixed(2));
+
+  return { unitPrice, total, serviceFees };
 }
 
 export default function QuoteSection() {
@@ -63,12 +79,15 @@ export default function QuoteSection() {
     product: "",
     complexity: "",
     material: "",
+    grammage: "",
     quantity: 50,
+    hasPatron: "",
     brandName: "",
     contactName: "",
     email: "",
     phone: "",
     notes: "",
+    files: {},
   });
 
   const estimate = getEstimate(form);
@@ -89,12 +108,12 @@ export default function QuoteSection() {
     return () => ctx.revert();
   }, []);
 
-  const updateForm = (key: keyof FormData, value: string | number) => {
+  const updateForm = (key: keyof FormData, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const goNext = () => {
-    if (step < 3) setStep((s) => (s + 1) as Step);
+    if (step < 4) setStep((s) => (s + 1) as Step);
   };
   const goPrev = () => {
     if (step > 1) setStep((s) => (s - 1) as Step);
@@ -102,9 +121,10 @@ export default function QuoteSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production: send to API route → email notification
     setSubmitted(true);
   };
+
+  const selectedProductData = PRODUCTS.find(p => p.id === form.product);
 
   return (
     <section
@@ -115,43 +135,42 @@ export default function QuoteSection() {
     >
       <div className="container">
         <div className={`quote-heading ${styles.header}`}>
-          <p className={`text-label ${styles.eyebrow}`}>Configurateur de devis</p>
+          <p className={`text-label ${styles.eyebrow}`}>Configurateur industriel</p>
           <h2 id="quote-heading" className={`text-headline ${styles.title}`}>
-            Une estimation en{" "}
-            <em className={styles.accent}>3 étapes.</em>
+            Lancez votre production en{" "}
+            <em className={styles.accent}>4 étapes.</em>
           </h2>
           <p className={`text-body ${styles.subtitle}`}>
-            Obtenez un prix estimatif immédiat. Notre équipe vous contactera dans
-            les 24h pour valider votre projet et affiner le devis.
+            Un outil professionnel pour estimer votre coût de confection (CMT). 
+            Plus votre dossier est complet, plus notre équipe sera réactive.
           </p>
         </div>
 
         {submitted ? (
           <div className={`quote-form ${styles.successCard}`} role="alert">
             <div className={styles.successIcon} aria-hidden="true">✓</div>
-            <h3 className={styles.successTitle}>Demande envoyée !</h3>
+            <h3 className={styles.successTitle}>Dossier reçu !</h3>
             <p className={styles.successBody}>
-              Merci <strong>{form.contactName}</strong>. Notre équipe vous contactera
-              sous 24h au {form.phone} ou par email à {form.email} pour finaliser
-              votre devis.
+              Merci <strong>{form.contactName}</strong>. Notre bureau d&apos;études 
+              analyse vos pièces. Vous recevrez un devis détaillé sous 24h.
             </p>
             <button
               className="btn btn-outline"
-              onClick={() => { setSubmitted(false); setStep(1); setForm({ product: "", complexity: "", material: "", quantity: 50, brandName: "", contactName: "", email: "", phone: "", notes: "" }); }}
+              onClick={() => { setSubmitted(false); setStep(1); setForm({ product: "", complexity: "", material: "", grammage: "", quantity: 50, hasPatron: "", brandName: "", contactName: "", email: "", phone: "", notes: "", files: {} }); }}
               id="quote-reset"
             >
-              Nouvelle demande
+              Nouveau projet
             </button>
           </div>
         ) : (
           <div className={`quote-form ${styles.formWrapper}`}>
             {/* Progress */}
-            <div className={styles.progress} role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={3} aria-label={`Étape ${step} sur 3`}>
-              {([1, 2, 3] as Step[]).map((s) => (
+            <div className={styles.progress} role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4} aria-label={`Étape ${step} sur 4`}>
+              {([1, 2, 3, 4] as Step[]).map((s) => (
                 <div key={s} className={`${styles.progressStep} ${step >= s ? styles.progressActive : ""}`}>
                   <span className={styles.progressNumber}>{s}</span>
                   <span className={styles.progressLabel}>
-                    {s === 1 ? "Produit" : s === 2 ? "Détails" : "Contact"}
+                    {s === 1 ? "Produit" : s === 2 ? "Technique" : s === 3 ? "Atouts" : "Contact"}
                   </span>
                 </div>
               ))}
@@ -161,7 +180,7 @@ export default function QuoteSection() {
               {/* STEP 1 — Product */}
               {step === 1 && (
                 <div className={styles.stepContent}>
-                  <h3 className={styles.stepTitle}>Quel type de pièce souhaitez-vous confectionner ?</h3>
+                  <h3 className={styles.stepTitle}>Type de pièce à confectionner</h3>
                   <div role="radiogroup" aria-label="Sélectionner un produit" className={styles.optionGrid}>
                       {PRODUCTS.map((p) => (
                         <button
@@ -174,7 +193,7 @@ export default function QuoteSection() {
                           id={`product-${p.id}`}
                         >
                           <span className={styles.optionLabel}>{p.label}</span>
-                          <span className={styles.optionHint}>à partir de {p.pricePerUnit}€/pcs*</span>
+                          <span className={styles.optionHint}>CMT à partir de {p.pricePerUnit}€</span>
                         </button>
                       ))}
                     </div>
@@ -187,14 +206,34 @@ export default function QuoteSection() {
                 </div>
               )}
 
-              {/* STEP 2 — Détails */}
+              {/* STEP 2 — Technique */}
               {step === 2 && (
                 <div className={styles.stepContent}>
-                  <h3 className={styles.stepTitle}>Précisez votre projet</h3>
+                  <h3 className={styles.stepTitle}>Spécifications techniques</h3>
+
+                  {/* Grammage */}
+                  <div className={styles.field}>
+                    <p className={styles.fieldLabel} id="grammage-label">Grammage du tissu souhaité</p>
+                    <div role="radiogroup" aria-labelledby="grammage-label" className={styles.optionGrid}>
+                      {selectedProductData?.grammages.map((g) => (
+                        <button
+                          key={g}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.grammage === g}
+                          className={`${styles.optionCard} ${form.grammage === g ? styles.optionSelected : ""}`}
+                          onClick={() => updateForm("grammage", g)}
+                          id={`grammage-${g.replace(/\s+/g, '-').toLowerCase()}`}
+                        >
+                          <span className={styles.optionLabel}>{g}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   {/* Complexity */}
                   <div className={styles.field}>
-                    <p className={styles.fieldLabel} id="complexity-label">Complexité de confection</p>
+                    <p className={styles.fieldLabel} id="complexity-label">Niveau de finition</p>
                     <div role="radiogroup" aria-labelledby="complexity-label" className={styles.optionGrid}>
                       {COMPLEXITIES.map((c) => (
                         <button
@@ -213,31 +252,10 @@ export default function QuoteSection() {
                     </div>
                   </div>
 
-                  {/* Material */}
-                  <div className={styles.field}>
-                    <p className={styles.fieldLabel} id="material-label">Type de matière</p>
-                    <div role="radiogroup" aria-labelledby="material-label" className={styles.optionGrid}>
-                      {MATERIALS.map((m) => (
-                        <button
-                          key={m.id}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.material === m.id}
-                          className={`${styles.optionCard} ${form.material === m.id ? styles.optionSelected : ""}`}
-                          onClick={() => updateForm("material", m.id)}
-                          id={`material-${m.id}`}
-                        >
-                          <span className={styles.optionLabel}>{m.label}</span>
-                          <span className={styles.optionHint}>{m.desc}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Quantity */}
                   <div className={styles.field}>
                     <label className={styles.fieldLabel} htmlFor="quantity-input">
-                      Quantité souhaitée
+                      Volume de production (PCS)
                     </label>
                     <div className={styles.quantityRow}>
                       {QUANTITY_STEPS.map((q) => (
@@ -260,117 +278,145 @@ export default function QuoteSection() {
                       value={form.quantity}
                       onChange={(e) => updateForm("quantity", parseInt(e.target.value) || 50)}
                       className={styles.quantityInput}
-                      aria-label="Quantité précise"
                     />
-                    <p className={styles.fieldHelper}>Minimum 50 pièces par coloris</p>
                   </div>
-
-                  {/* Estimation */}
-                  {estimate && (
-                    <div className={styles.estimate} role="status" aria-live="polite">
-                      <p className={styles.estimateLabel}>Estimation indicative</p>
-                      <div className={styles.estimateValues}>
-                        <div className={styles.estimateItem}>
-                          <span className={styles.estimateValue}>{estimate.unitPrice}€</span>
-                          <span className={styles.estimateUnit}>/ pièce</span>
-                        </div>
-                        <div className={styles.estimateDivider} aria-hidden="true" />
-                        <div className={styles.estimateItem}>
-                          <span className={styles.estimateValue}>{estimate.total.toLocaleString("fr")}€</span>
-                          <span className={styles.estimateUnit}>total</span>
-                        </div>
-                      </div>
-                      <p className={styles.estimateNote}>
-                        * Hors matière première et transport. Devis final après échange avec notre équipe.
-                      </p>
-                    </div>
-                  )}
 
                   <div className={styles.stepActions}>
                     <button type="button" className="btn btn-outline" onClick={goPrev} id="step2-prev">← Retour</button>
-                    <button type="button" className="btn btn-primary" onClick={goNext} disabled={!form.complexity || !form.material} id="step2-next">
+                    <button type="button" className="btn btn-primary" onClick={goNext} disabled={!form.grammage || !form.complexity} id="step2-next">
                       Étape suivante →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 3 — Contact */}
+              {/* STEP 3 — Atouts Techniques */}
               {step === 3 && (
                 <div className={styles.stepContent}>
-                  <h3 className={styles.stepTitle}>Vos coordonnées</h3>
+                  <h3 className={styles.stepTitle}>Dossier de production</h3>
                   <p className={styles.stepBody}>
-                    Un membre de notre équipe vous appellera sous 24h pour affiner votre devis et valider votre projet.
+                    Avez-vous déjà les patrons et fiches techniques ou devons-nous les créer ?
                   </p>
+
+                  <div className={styles.field}>
+                    <p className={styles.fieldLabel}>Possédez-vous un patron (file .dxf, .pdf) ?</p>
+                    <div role="radiogroup" className={styles.optionGrid}>
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={form.hasPatron === "yes"}
+                        className={`${styles.optionCard} ${form.hasPatron === "yes" ? styles.optionSelected : ""}`}
+                        onClick={() => updateForm("hasPatron", "yes")}
+                      >
+                        <span className={styles.optionLabel}>Oui, je fournis le patron</span>
+                        <span className={styles.optionHint}>Pas de frais de développement</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={form.hasPatron === "no"}
+                        className={`${styles.optionCard} ${form.hasPatron === "no" ? styles.optionSelected : ""}`}
+                        onClick={() => updateForm("hasPatron", "no")}
+                      >
+                        <span className={styles.optionLabel}>Non, création par Capsule</span>
+                        <span className={styles.optionHint}>Frais de modélisme à prévoir</span>
+                      </button>
+                    </div>
+                  </div>
 
                   <div className={styles.fieldsGrid}>
                     <div className={styles.field}>
-                      <label className={styles.fieldLabel} htmlFor="brand-name">Nom de votre marque *</label>
+                      <label className={styles.fieldLabel}>Schéma / Tech Pack (Optionnel)</label>
+                      <div className={styles.fileUpload}>
+                        <input type="file" id="file-schema" className="sr-only" onChange={(e) => updateForm("files", { ...form.files, schema: e.target.files?.[0]?.name })} />
+                        <label htmlFor="file-schema" className={styles.fileLabel}>
+                          {form.files.schema || "Choisir un fichier…"}
+                        </label>
+                      </div>
+                    </div>
+                    <div className={styles.field}>
+                      <label className={styles.fieldLabel}>Photo de référence (Optionnel)</label>
+                      <div className={styles.fileUpload}>
+                        <input type="file" id="file-photo" className="sr-only" onChange={(e) => updateForm("files", { ...form.files, patron: e.target.files?.[0]?.name })} />
+                        <label htmlFor="file-photo" className={styles.fileLabel}>
+                          {form.files.patron || "Choisir un fichier…"}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.stepActions}>
+                    <button type="button" className="btn btn-outline" onClick={goPrev} id="step3-prev">← Retour</button>
+                    <button type="button" className="btn btn-primary" onClick={goNext} disabled={!form.hasPatron} id="step3-next">
+                      Étape suivante →
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4 — Contact */}
+              {step === 4 && (
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>Informations professionnelles</h3>
+
+                  <div className={styles.fieldsGrid}>
+                    <div className={styles.field}>
+                      <label className={styles.fieldLabel} htmlFor="brand-name">Nom de la marque / Société *</label>
                       <input
                         type="text"
                         id="brand-name"
-                        name="brandName"
                         className={styles.input}
                         value={form.brandName}
                         onChange={(e) => updateForm("brandName", e.target.value)}
                         required
-                        autoComplete="organization"
-                        placeholder="Ex : Brand Studio…"
+                        placeholder="Ex : Apparel Co."
                       />
                     </div>
                     <div className={styles.field}>
-                      <label className={styles.fieldLabel} htmlFor="contact-name">Votre prénom et nom *</label>
+                      <label className={styles.fieldLabel} htmlFor="contact-name">Interlocuteur *</label>
                       <input
                         type="text"
                         id="contact-name"
-                        name="contactName"
                         className={styles.input}
                         value={form.contactName}
                         onChange={(e) => updateForm("contactName", e.target.value)}
                         required
-                        autoComplete="name"
-                        placeholder="Jean Dupont…"
+                        placeholder="Prénom Nom"
                       />
                     </div>
                     <div className={styles.field}>
-                      <label className={styles.fieldLabel} htmlFor="email">Adresse e-mail *</label>
+                      <label className={styles.fieldLabel} htmlFor="email">Email professionnel *</label>
                       <input
                         type="email"
                         id="email"
-                        name="email"
                         className={styles.input}
                         value={form.email}
                         onChange={(e) => updateForm("email", e.target.value)}
                         required
-                        autoComplete="email"
-                        spellCheck={false}
-                        placeholder="jean@brand.com…"
+                        placeholder="pro@marque.com"
                       />
                     </div>
                     <div className={styles.field}>
-                      <label className={styles.fieldLabel} htmlFor="phone">Numéro de téléphone *</label>
+                      <label className={styles.fieldLabel} htmlFor="phone">Téléphone *</label>
                       <input
                         type="tel"
                         id="phone"
-                        name="phone"
                         className={styles.input}
                         value={form.phone}
                         onChange={(e) => updateForm("phone", e.target.value)}
                         required
-                        autoComplete="tel"
-                        placeholder="+33 6 00 00 00 00…"
+                        placeholder="+33 6 ..."
                       />
-                      <p className={styles.fieldHelper}>Notre équipe vous rappellera à ce numéro</p>
                     </div>
                     <div className={`${styles.field} ${styles.fieldFull}`}>
-                      <label className={styles.fieldLabel} htmlFor="notes">Notes complémentaires</label>
+                      <label className={styles.fieldLabel} htmlFor="notes">Commentaires (matières, coloris, labels...)</label>
                       <textarea
                         id="notes"
                         className={`${styles.input} ${styles.textarea}`}
                         value={form.notes}
                         onChange={(e) => updateForm("notes", e.target.value)}
                         rows={3}
-                        placeholder="Précisions sur votre projet, date de lancement, coloris souhaités..."
+                        placeholder="Précisions sur votre projet industriel..."
                       />
                     </div>
                   </div>
@@ -378,24 +424,31 @@ export default function QuoteSection() {
                   {/* Summary */}
                   {estimate && (
                     <div className={styles.summary}>
-                      <p className={styles.summaryTitle}>Récapitulatif</p>
+                      <p className={styles.summaryTitle}>Récapitulatif prévisionnel</p>
                       <ul className={styles.summaryList}>
-                        <li><span>Produit</span><span>{PRODUCTS.find(p => p.id === form.product)?.label}</span></li>
-                        <li><span>Quantité</span><span>{form.quantity} pièces</span></li>
-                        <li><span>Estimation confection</span><span>{estimate.unitPrice}€/pcs · {estimate.total.toLocaleString("fr")}€ total</span></li>
+                        <li><span>Produit</span><span>{selectedProductData?.label} ({form.grammage})</span></li>
+                        <li><span>Volume</span><span>{form.quantity} pièces</span></li>
+                        <li><span>Estimation CMT</span><span>{estimate.unitPrice}€/pcs</span></li>
+                        {estimate.serviceFees > 0 && (
+                          <li><span>Frais développement</span><span>{estimate.serviceFees}€ (Patronage)</span></li>
+                        )}
+                        <li><span>Total estimé HT</span><span>{estimate.total.toLocaleString("fr")}€</span></li>
                       </ul>
+                      <p className={styles.estimateNote} style={{ marginTop: '0.5rem' }}>
+                        * Estimation hors transport et matières premières. Validée après étude du dossier technique.
+                      </p>
                     </div>
                   )}
 
                   <div className={styles.stepActions}>
-                    <button type="button" className="btn btn-outline" onClick={goPrev} id="step3-prev">← Retour</button>
+                    <button type="button" className="btn btn-outline" onClick={goPrev} id="step4-prev">← Retour</button>
                     <button
                       type="submit"
                       className="btn btn-primary"
                       disabled={!form.brandName || !form.contactName || !form.email || !form.phone}
                       id="quote-submit"
                     >
-                      Envoyer ma demande
+                      Transmettre le dossier
                     </button>
                   </div>
                 </div>

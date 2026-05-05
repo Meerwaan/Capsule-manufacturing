@@ -44,30 +44,30 @@ function IconJacket() {
 const PRODUCTS = [
   {
     id: "tshirt",
-    name: "T-Shirt",
+    name: "T-Shirt Industriel",
     category: "Maille circulaire",
     moq: "50",
     delay: "2–3 sem.",
-    features: ["Col rond ou V", "Manches courtes / longues", "Coupe regular ou oversized", "100% coton, recyclé ou mix"],
+    features: ["Jersey 160g à 240g", "Colletage double aiguille", "Bande de propreté épaule", "Coupe personnalisée (CAO)"],
     Icon: IconTshirt,
   },
   {
     id: "hoodie",
-    name: "Hoodie",
+    name: "Hoodie Premium",
     category: "Molleton",
     moq: "50",
     delay: "3–4 sem.",
-    features: ["Capuche simple ou double", "Poche kangourou", "Col zippé ou pull", "Grammage 280–400\u202fg/m²"],
+    features: ["Molleton gratté ou bouclé", "Grammage 320g–450g", "Capuche doublée & surpiquée", "Finitions bord-côte élasthanne"],
     Icon: IconHoodie,
     featured: true,
   },
   {
     id: "veste-zipee",
-    name: "Veste Zippée",
-    category: "Maille / Tissu",
+    name: "Veste Zippée / Sweat",
+    category: "Maille lourde",
     moq: "50",
     delay: "3–4 sem.",
-    features: ["Zip YKK premium", "Poches latérales", "Intérieur sherpa optionnel", "Coupe bomber ou classique"],
+    features: ["Zip YKK injecté ou métal", "Poches passepoilées", "Surpiqûres de renfort", "Traitement anti-pilling"],
     Icon: IconJacket,
   },
 ];
@@ -82,11 +82,19 @@ export default function ServicesSection() {
           y: 40, autoAlpha: 0, duration: 0.9, ease: "power3.out",
           scrollTrigger: { trigger: ".services-heading", start: "top 85%" },
         });
-        gsap.from(".product-card", {
-          y: 60, autoAlpha: 0, duration: 0.8,
-          stagger: 0.15, ease: "power3.out",
-          scrollTrigger: { trigger: ".products-grid", start: "top 75%" },
-        });
+        // Fade only — no y movement to avoid breaking grid row height
+        gsap.fromTo(
+          ".product-card",
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "power2.out",
+            clearProps: "opacity",
+            scrollTrigger: { trigger: ".products-grid", start: "top 80%" },
+          }
+        );
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -155,7 +163,7 @@ export default function ServicesSection() {
               {/* Fixed href: just #devis, product pre-selection handled by URL search param */}
               <Link
                 href={`#devis`}
-                className={`btn ${product.featured ? "btn-primary" : "btn-outline"}`}
+                className={`btn ${product.featured ? "btn-primary" : "btn-outline"} ${styles.cta}`}
                 id={`cta-${product.id}`}
               >
                 Obtenir un devis

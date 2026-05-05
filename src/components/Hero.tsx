@@ -82,6 +82,19 @@ export default function Hero() {
                 scrub: true,
               },
             });
+
+            // Scroll indicator fade out
+            gsap.to(".hero-scroll-indicator", {
+              y: 40,
+              autoAlpha: 0,
+              ease: "power2.in",
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "20% top",
+                scrub: true,
+              },
+            });
           }
         }
       );
@@ -161,7 +174,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className={styles.scrollIndicator} aria-hidden="true">
+      <div className={`hero-scroll-indicator ${styles.scrollIndicator}`} aria-hidden="true">
         <div className={styles.scrollLine} />
         <span className={`text-label ${styles.scrollText}`}>Découvrir</span>
       </div>

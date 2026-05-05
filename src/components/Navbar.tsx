@@ -50,6 +50,9 @@ export default function Navbar() {
             <Link href="#services" className={styles.link}>Services</Link>
           </li>
           <li>
+            <Link href="#expertise" className={styles.link}>Expertise</Link>
+          </li>
+          <li>
             <Link href="#tunisie" className={styles.link}>Notre Atelier</Link>
           </li>
           <li>

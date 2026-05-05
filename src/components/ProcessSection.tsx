@@ -11,7 +11,7 @@ const STEPS = [
   {
     num: "01",
     title: "Configurez & Estimez",
-    body: "Renseignez votre projet en 3 étapes via notre configurateur en ligne. Obtenez une estimation de prix immédiate.",
+    body: "Renseignez votre projet en 4 étapes via notre configurateur industriel. Obtenez une estimation de coût CMT immédiate.",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
         <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5"/>

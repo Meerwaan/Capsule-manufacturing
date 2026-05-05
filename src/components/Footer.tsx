@@ -24,9 +24,8 @@ export default function Footer() {
           <div className={styles.navCol}>
             <p className={styles.navTitle}>Services</p>
             <ul role="list">
-              <li><Link href="#services" className={styles.navLink}>T-Shirt</Link></li>
-              <li><Link href="#services" className={styles.navLink}>Hoodie</Link></li>
-              <li><Link href="#services" className={styles.navLink}>Veste Zippée</Link></li>
+              <li><Link href="#services" className={styles.navLink}>Produits</Link></li>
+              <li><Link href="#expertise" className={styles.navLink}>Expertise Technique</Link></li>
               <li><Link href="#devis" className={styles.navLink}>Obtenir un devis</Link></li>
             </ul>
           </div>

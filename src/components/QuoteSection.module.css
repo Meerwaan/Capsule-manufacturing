@@ -443,3 +443,43 @@
 }
 
 .successBody strong { font-weight: 500; color: var(--text-primary); }
+
+/* File Upload */
+.fileUpload {
+  position: relative;
+  width: 100%;
+}
+
+.fileLabel {
+  display: block;
+  width: 100%;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  border: 1px dashed var(--border-subtle, #D8D8D2);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--bg-secondary, #F5F2EC);
+  color: var(--text-secondary);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  cursor: pointer;
+  text-align: center;
+  transition: all 200ms ease;
+}
+
+.fileLabel:hover {
+  border-color: var(--color-gold, #C4A35A);
+  background: rgba(196, 163, 90, 0.04);
+  color: var(--text-primary);
+}
+
+/* Accessibility */
+:global(.sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
