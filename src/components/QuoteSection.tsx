@@ -162,26 +162,22 @@ export default function QuoteSection() {
               {step === 1 && (
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>Quel type de pièce souhaitez-vous confectionner ?</h3>
-                  <fieldset className={styles.fieldset}>
-                    <legend className="sr-only">Sélectionner un produit</legend>
-                    <div className={styles.optionGrid}>
+                  <div role="radiogroup" aria-label="Sélectionner un produit" className={styles.optionGrid}>
                       {PRODUCTS.map((p) => (
-                        <label key={p.id} className={`${styles.optionCard} ${form.product === p.id ? styles.optionSelected : ""}`} htmlFor={`product-${p.id}`}>
-                          <input
-                            type="radio"
-                            id={`product-${p.id}`}
-                            name="product"
-                            value={p.id}
-                            checked={form.product === p.id}
-                            onChange={(e) => updateForm("product", e.target.value)}
-                            className="sr-only"
-                          />
+                        <button
+                          key={p.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.product === p.id}
+                          className={`${styles.optionCard} ${form.product === p.id ? styles.optionSelected : ""}`}
+                          onClick={() => updateForm("product", p.id)}
+                          id={`product-${p.id}`}
+                        >
                           <span className={styles.optionLabel}>{p.label}</span>
                           <span className={styles.optionHint}>à partir de {p.pricePerUnit}€/pcs*</span>
-                        </label>
+                        </button>
                       ))}
                     </div>
-                  </fieldset>
 
                   <div className={styles.stepActions}>
                     <button type="button" className="btn btn-primary" onClick={goNext} disabled={!form.product} id="step1-next">
@@ -199,21 +195,20 @@ export default function QuoteSection() {
                   {/* Complexity */}
                   <div className={styles.field}>
                     <p className={styles.fieldLabel} id="complexity-label">Complexité de confection</p>
-                    <div className={styles.optionGrid} role="radiogroup" aria-labelledby="complexity-label">
+                    <div role="radiogroup" aria-labelledby="complexity-label" className={styles.optionGrid}>
                       {COMPLEXITIES.map((c) => (
-                        <label key={c.id} className={`${styles.optionCard} ${form.complexity === c.id ? styles.optionSelected : ""}`} htmlFor={`complexity-${c.id}`}>
-                          <input
-                            type="radio"
-                            id={`complexity-${c.id}`}
-                            name="complexity"
-                            value={c.id}
-                            checked={form.complexity === c.id}
-                            onChange={(e) => updateForm("complexity", e.target.value)}
-                            className="sr-only"
-                          />
+                        <button
+                          key={c.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.complexity === c.id}
+                          className={`${styles.optionCard} ${form.complexity === c.id ? styles.optionSelected : ""}`}
+                          onClick={() => updateForm("complexity", c.id)}
+                          id={`complexity-${c.id}`}
+                        >
                           <span className={styles.optionLabel}>{c.label}</span>
                           <span className={styles.optionHint}>{c.desc}</span>
-                        </label>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -221,21 +216,20 @@ export default function QuoteSection() {
                   {/* Material */}
                   <div className={styles.field}>
                     <p className={styles.fieldLabel} id="material-label">Type de matière</p>
-                    <div className={styles.optionGrid} role="radiogroup" aria-labelledby="material-label">
+                    <div role="radiogroup" aria-labelledby="material-label" className={styles.optionGrid}>
                       {MATERIALS.map((m) => (
-                        <label key={m.id} className={`${styles.optionCard} ${form.material === m.id ? styles.optionSelected : ""}`} htmlFor={`material-${m.id}`}>
-                          <input
-                            type="radio"
-                            id={`material-${m.id}`}
-                            name="material"
-                            value={m.id}
-                            checked={form.material === m.id}
-                            onChange={(e) => updateForm("material", e.target.value)}
-                            className="sr-only"
-                          />
+                        <button
+                          key={m.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.material === m.id}
+                          className={`${styles.optionCard} ${form.material === m.id ? styles.optionSelected : ""}`}
+                          onClick={() => updateForm("material", m.id)}
+                          id={`material-${m.id}`}
+                        >
                           <span className={styles.optionLabel}>{m.label}</span>
                           <span className={styles.optionHint}>{m.desc}</span>
-                        </label>
+                        </button>
                       ))}
                     </div>
                   </div>
