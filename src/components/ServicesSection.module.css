@@ -34,24 +34,31 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-4, 1rem);
-  margin-bottom: var(--space-12, 3rem);
-  align-items: start;
+  margin-bottom: var(--space-20, 5rem);
 }
 
 @media (min-width: 768px) {
-  .grid { grid-template-columns: repeat(3, 1fr); }
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    /* Force all cards to same height via 1fr row */
+    grid-auto-rows: 1fr;
+  }
 }
 
-/* Card */
+/* Card — ALL cards reserve same badge slot at top for equal height */
 .card {
   position: relative;
   background: var(--color-white, #FFF);
   border: 1px solid var(--border-subtle, #D8D8D2);
   border-radius: var(--radius-md, 8px);
   padding: var(--space-8, 2rem);
+  padding-top: calc(var(--space-8, 2rem) + 28px);
   display: flex;
   flex-direction: column;
   gap: var(--space-6, 1.5rem);
+  /* Fill the grid-auto-rows: 1fr area completely */
+  height: 100%;
+  box-sizing: border-box;
   transition:
     box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -68,9 +75,6 @@
 .cardFeatured {
   border-color: var(--color-gold, #C4A35A);
   background: var(--color-white, #FFF);
-  /* Compensate for the protruding badge */
-  margin-top: 0;
-  padding-top: calc(var(--space-8, 2rem) + 20px);
 }
 
 .cardFeatured:hover {
@@ -78,20 +82,24 @@
   box-shadow: 0 8px 32px rgba(196, 163, 90, 0.15);
 }
 
-/* Badge */
+/* Badge — full-width strip at top of card, position:absolute within the 28px slot */
 .badge {
   position: absolute;
-  top: -1px;
-  left: var(--space-6, 1.5rem);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-gold, #C4A35A);
   color: var(--color-charcoal-900, #111110);
   font-family: var(--font-sans, 'Inter', sans-serif);
   font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 3px var(--space-3, 0.75rem);
-  border-radius: 0 0 var(--radius-sm, 4px) var(--radius-sm, 4px);
+  border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0;
 }
 
 /* SVG Icon */
