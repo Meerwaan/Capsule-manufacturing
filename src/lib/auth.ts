@@ -1,27 +1,33 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
-// import EmailProvider from "next-auth/providers/email";
+import EmailProvider from "next-auth/providers/email";
 import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
   providers: [
-    /* 
     EmailProvider({
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
+        host: process.env.EMAIL_SERVER_HOST || "smtp.example.com",
+        port: Number(process.env.EMAIL_SERVER_PORT) || 587,
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: process.env.EMAIL_SERVER_USER || "user",
+          pass: process.env.EMAIL_SERVER_PASSWORD || "pass",
         },
       },
-      from: process.env.EMAIL_FROM,
+      from: process.env.EMAIL_FROM || "noreply@capsule-manufacturing.com",
+      // Custom sendVerificationRequest pour afficher le lien dans la console en phase de test (sans SMTP)
+      async sendVerificationRequest({ identifier: email, url }) {
+        console.log(`\n\n======================================================`);
+        console.log(`✉️ EMAIL MAGIQUE ENVOYÉ À : ${email}`);
+        console.log(`🔗 LIEN DE CONNEXION : \n${url}`);
+        console.log(`======================================================\n\n`);
+      }
     }),
-    */
-    // Provider temporaire pour l'accès Admin immédiat (en attendant SMTP)
+    // Provider temporaire pour l'accès Admin immédiat
     {
       id: "credentials",
       name: "Credentials",
