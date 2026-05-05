@@ -1,0 +1,199 @@
+.section {
+  background-color: var(--bg-primary, #FAFAF8);
+}
+
+.header {
+  margin-bottom: var(--space-16, 4rem);
+  max-width: 640px;
+}
+
+.eyebrow {
+  color: var(--color-gold, #C4A35A);
+  display: block;
+  margin-bottom: var(--space-4, 1rem);
+}
+
+.title {
+  margin-bottom: var(--space-6, 1.5rem);
+  color: var(--text-primary);
+}
+
+.accent {
+  font-style: italic;
+  color: var(--color-gold, #C4A35A);
+}
+
+.subtitle {
+  max-width: 52ch;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4, 1rem);
+  margin-bottom: var(--space-12, 3rem);
+}
+
+@media (min-width: 768px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Card */
+.card {
+  position: relative;
+  background: var(--color-white, #FFF);
+  border: 1px solid var(--border-subtle, #D8D8D2);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-8, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6, 1.5rem);
+  transition:
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(17,17,16,0.08));
+  transform: translateY(-4px);
+}
+
+/* Featured card */
+.cardFeatured {
+  border-color: var(--color-gold, #C4A35A);
+  background: var(--color-white, #FFF);
+}
+
+.cardFeatured:hover {
+  border-color: var(--color-gold, #C4A35A);
+  box-shadow: 0 8px 32px rgba(196, 163, 90, 0.15);
+}
+
+/* Badge */
+.badge {
+  position: absolute;
+  top: -1px;
+  left: var(--space-6, 1.5rem);
+  background: var(--color-gold, #C4A35A);
+  color: var(--color-charcoal-900, #111110);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px var(--space-3, 0.75rem);
+  border-radius: 0 0 var(--radius-sm, 4px) var(--radius-sm, 4px);
+}
+
+/* Emoji */
+.cardEmoji {
+  font-size: 2rem;
+  line-height: 1;
+  filter: grayscale(0.3);
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 0.25rem);
+}
+
+.category {
+  color: var(--text-muted, #9A9A94);
+  font-size: 0.7rem;
+}
+
+.productName {
+  font-family: var(--font-serif, 'Cormorant Garamond', serif);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+/* Features */
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+  flex: 1;
+}
+
+.feature {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3, 0.75rem);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.featureCheck {
+  color: var(--color-gold, #C4A35A);
+  font-size: var(--text-xs, 0.75rem);
+  flex-shrink: 0;
+}
+
+/* Meta */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 1rem);
+  padding: var(--space-4, 1rem) 0;
+  border-top: 1px solid var(--border-subtle, #D8D8D2);
+  border-bottom: 1px solid var(--border-subtle, #D8D8D2);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.metaValue {
+  font-family: var(--font-serif, 'Cormorant Garamond', serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.metaKey {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #9A9A94);
+}
+
+.metaDivider {
+  width: 1px;
+  height: 32px;
+  background: var(--border-subtle, #D8D8D2);
+  flex-shrink: 0;
+}
+
+/* Bottom note */
+.note {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 300;
+  color: var(--text-muted, #9A9A94);
+  text-align: center;
+}
+
+.noteLink {
+  color: var(--color-gold, #C4A35A);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 200ms ease;
+}
+
+.noteLink:hover {
+  opacity: 0.7;
+}
