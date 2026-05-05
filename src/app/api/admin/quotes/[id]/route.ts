@@ -28,6 +28,26 @@ export async function PATCH(
       ? (unitPrice * quote.quantity) + (setupFees || 0)
       : quote.totalPrice;
 
+    let finalUserId = quote.userId;
+
+    // Si on chiffre le devis et qu'il n'y a pas de User, on en crée un
+    if (status === "PRICED" && !finalUserId) {
+      let user = await prisma.user.findUnique({ where: { email: quote.email } });
+      
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email: quote.email,
+            name: quote.contactName,
+            brandName: quote.brandName,
+            role: "CLIENT",
+            password: "TEMP_PASSWORD_TO_BE_RESET" // Placeholder, en attente de l'EmailProvider (Magic Links)
+          }
+        });
+      }
+      finalUserId = user.id;
+    }
+
     // Mise à jour du devis
     const updatedQuote = await prisma.quote.update({
       where: { id },
@@ -37,11 +57,12 @@ export async function PATCH(
         leadTime,
         totalPrice,
         status,
+        userId: finalUserId
       },
     });
 
-    // Si validé, on crée un Projet (Production)
-    if (status === "VALIDATED" && quote.userId) {
+    // Si PAYÉ, on crée un Projet (Production)
+    if (status === "PAID" && finalUserId) {
       // On génère une référence unique type PROJ-2024-XXXX
       const ref = `PRJ-${new Date().getFullYear()}-${id.toString().padStart(4, '0')}`;
       
@@ -50,7 +71,7 @@ export async function PATCH(
       if (!existingProject) {
         await prisma.project.create({
           data: {
-            userId: quote.userId,
+            userId: finalUserId,
             quoteId: id,
             reference: ref,
             product: quote.product,

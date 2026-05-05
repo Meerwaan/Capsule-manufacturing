@@ -40,7 +40,7 @@ export default function QuotePricingForm({
           unitPrice: parseFloat(unitPrice),
           setupFees: setupFees ? parseFloat(setupFees) : 0,
           leadTime,
-          status: "VALIDATED"
+          status: "PRICED" // Envoyer pour paiement
         })
       });
 
@@ -70,11 +70,28 @@ export default function QuotePricingForm({
     }
   };
 
+  const handleMarkAsPaid = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/quotes/${quoteId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "PAID" })
+      });
+      if (!res.ok) throw new Error("Erreur");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const currentUnitPrice = parseFloat(unitPrice) || 0;
   const currentSetupFees = parseFloat(setupFees) || 0;
   const total = (currentUnitPrice * quantity) + currentSetupFees;
 
-  const isLocked = status === "VALIDATED" || status === "REJECTED";
+  const isLocked = status === "VALIDATED" || status === "REJECTED" || status === "PAID" || status === "PRICED";
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
@@ -139,16 +156,31 @@ export default function QuotePricingForm({
             disabled={loading}
             style={{ flex: 2, padding: 'var(--space-3)', backgroundColor: 'var(--color-gold)', border: 'none', color: 'var(--color-charcoal-900)', fontWeight: 600, borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: '0.2s' }}
           >
-            Valider le Devis & Informer
+            Créer Compte Client & Envoyer pour Paiement
           </button>
         </div>
       )}
       
       {isLocked && (
-        <div style={{ padding: 'var(--space-4)', backgroundColor: status === "VALIDATED" ? 'rgba(39, 174, 96, 0.1)' : 'rgba(192, 57, 43, 0.1)', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}>
-          <p style={{ color: status === "VALIDATED" ? 'var(--color-success)' : 'var(--color-error)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
-            Ce devis a été {status === "VALIDATED" ? "validé" : "refusé"}.
-          </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          <div style={{ padding: 'var(--space-4)', backgroundColor: status === "REJECTED" ? 'rgba(192, 57, 43, 0.1)' : 'rgba(39, 174, 96, 0.1)', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}>
+            <p style={{ color: status === "REJECTED" ? 'var(--color-error)' : 'var(--color-success)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
+              {status === "PRICED" && "Devis chiffré. En attente de paiement du client."}
+              {status === "PAID" && "Devis payé. Projet en cours de production."}
+              {status === "VALIDATED" && "Devis validé."}
+              {status === "REJECTED" && "Devis refusé."}
+            </p>
+          </div>
+          
+          {status === "PRICED" && (
+            <button 
+              onClick={handleMarkAsPaid}
+              disabled={loading}
+              style={{ padding: 'var(--space-3)', backgroundColor: 'var(--color-white)', color: 'var(--color-charcoal-900)', fontWeight: 600, borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', transition: '0.2s' }}
+            >
+              Simuler Paiement (Marquer comme Payé)
+            </button>
+          )}
         </div>
       )}
     </div>
