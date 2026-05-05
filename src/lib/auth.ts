@@ -3,8 +3,21 @@ import { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { prisma } from "./prisma";
 
+// Custom adapter wrapper pour contourner le fait que NextAuth passe des Strings alors que Prisma attend un Int
+const customPrismaAdapter = {
+  ...PrismaAdapter(prisma),
+  getUser: (id: string) => prisma.user.findUnique({ where: { id: Number(id) } }),
+  getUserByAccount: (provider_providerAccountId: { providerAccountId: string, provider: string }) => 
+    prisma.account.findUnique({
+      where: { provider_providerAccountId },
+      select: { user: true },
+    }).then(res => res?.user ?? null),
+  updateUser: (user: any) => prisma.user.update({ where: { id: Number(user.id) }, data: user }),
+  // Les sessions et verify tokens ne posent pas problème car ils utilisent des ID string natives dans notre schema
+};
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: customPrismaAdapter as any,
   session: {
     strategy: "jwt",
   },
@@ -72,7 +85,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         // @ts-ignore
-        token.id = user.id;
+        token.id = user.id.toString();
         // @ts-ignore
         token.role = user.role;
       }

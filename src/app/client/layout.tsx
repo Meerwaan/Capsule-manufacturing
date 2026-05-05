@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import LogoutButton from "@/components/admin/LogoutButton";
 import styles from "./client.module.css";
+import { LayoutDashboard, FileText, Package } from "lucide-react";
 
 export default async function ClientLayout({
   children,
@@ -18,7 +19,7 @@ export default async function ClientLayout({
 
   // @ts-ignore
   if (session.user.role === "ADMIN") {
-    redirect("/admin"); // Les admins vont sur /admin
+    redirect("/admin"); 
   }
 
   return (
@@ -28,12 +29,26 @@ export default async function ClientLayout({
           CAPSULE <span>Marque</span>
         </Link>
         <div className={styles.navLinks}>
-          <Link href="/client" className={styles.navLink}>Dashboard</Link>
-          <Link href="/client/quotes" className={styles.navLink}>Mes Devis</Link>
-          <Link href="/client/projects" className={styles.navLink}>Mes Productions</Link>
+          <Link href="/client" className={styles.navLink}>
+            <LayoutDashboard className={styles.navLinkIcon} />
+            Dashboard
+          </Link>
+          <Link href="/client/quotes" className={styles.navLink}>
+            <FileText className={styles.navLinkIcon} />
+            Mes Devis
+          </Link>
+          <Link href="/client/projects" className={styles.navLink}>
+            <Package className={styles.navLinkIcon} />
+            Mes Productions
+          </Link>
         </div>
         <div className={styles.userInfo}>
-          <span>{session.user.name || session.user.email}</span>
+          <div className={styles.userProfile}>
+            <div className={styles.userAvatar}>
+              {session.user?.name ? session.user.name.substring(0, 1).toUpperCase() : session.user?.email?.substring(0, 1).toUpperCase()}
+            </div>
+            <span>{session.user?.name || session.user?.email}</span>
+          </div>
           <LogoutButton />
         </div>
       </nav>
