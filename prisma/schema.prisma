@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -32,16 +31,27 @@ enum Role {
 model Quote {
   id          Int      @id @default(autoincrement())
   userId      Int?
-  product     String   // tshirt | hoodie | veste
-  complexity  String   // basic | intermediate | advanced
-  material    String
+  product     String   // tshirt | hoodie | veste | jogging
+  materialType String
+  grammage     String
+  branding     String
+  brandingLocations Int
+  neckLabel    String
+  hangtag      String
+  packaging    String
+  hasPatron    String
+  wantsPrototype String
+  leadTime     String?
   quantity    Int
   unitPrice   Float?
   totalPrice  Float?
+  setupFees   Float?
   brandName   String
   contactName String
   email       String
   phone       String
+  schemaFile  String?
+  patronFile  String?
   notes       String?  @db.Text
   status      QuoteStatus @default(PENDING)
   createdAt   DateTime @default(now())

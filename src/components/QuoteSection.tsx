@@ -22,8 +22,8 @@ type FormData = {
   hasPatron: string;
   wantsPrototype: string;
   files: {
-    patron?: string;
-    schema?: string;
+    patron?: File;
+    schema?: File;
   };
   brandName: string;
   contactName: string;
@@ -104,6 +104,7 @@ export default function QuoteSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState<Step>(1);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<FormData>({
     product: "",
     quantity: 50,
@@ -168,9 +169,44 @@ export default function QuoteSection() {
     if (step > 1) setStep((s) => (s - 1) as Step);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      
+      // Ajout de tous les champs texte/nombre
+      Object.entries(form).forEach(([key, value]) => {
+        if (key !== "files") {
+          formData.append(key, String(value));
+        }
+      });
+
+      // Ajout de l'estimation
+      formData.append("estimate", JSON.stringify(estimate));
+
+      // Ajout des fichiers
+      if (form.files.schema) formData.append("file-schema", form.files.schema);
+      if (form.files.patron) formData.append("file-patron", form.files.patron);
+
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        body: formData, // On envoie le FormData directement
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        const error = await response.json();
+        alert(error.error || "Une erreur est survenue.");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      alert("Impossible d'envoyer le devis. Vérifiez votre connexion.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const selectedProductData = PRODUCTS.find(p => p.id === form.product);
@@ -492,18 +528,28 @@ export default function QuoteSection() {
                     <div className={styles.field}>
                       <label className={styles.fieldLabel}>Tech Pack / Dossier Technique (Optionnel)</label>
                       <div className={styles.fileUpload}>
-                        <input type="file" id="file-schema" className="sr-only" onChange={(e) => updateForm("files", { ...form.files, schema: e.target.files?.[0]?.name })} />
+                        <input
+                          type="file"
+                          id="file-schema"
+                          className="sr-only"
+                          onChange={(e) => updateForm("files", { ...form.files, schema: e.target.files?.[0] })}
+                        />
                         <label htmlFor="file-schema" className={styles.fileLabel}>
-                          {form.files.schema || "Choisir un fichier…"}
+                          {form.files.schema ? form.files.schema.name : "Choisir un fichier…"}
                         </label>
                       </div>
                     </div>
                     <div className={styles.field}>
                       <label className={styles.fieldLabel}>Fichiers Graphiques / Patron (Optionnel)</label>
                       <div className={styles.fileUpload}>
-                        <input type="file" id="file-photo" className="sr-only" onChange={(e) => updateForm("files", { ...form.files, patron: e.target.files?.[0]?.name })} />
-                        <label htmlFor="file-photo" className={styles.fileLabel}>
-                          {form.files.patron || "Choisir un fichier…"}
+                        <input
+                          type="file"
+                          id="file-patron"
+                          className="sr-only"
+                          onChange={(e) => updateForm("files", { ...form.files, patron: e.target.files?.[0] })}
+                        />
+                        <label htmlFor="file-patron" className={styles.fileLabel}>
+                          {form.files.patron ? form.files.patron.name : "Choisir un fichier…"}
                         </label>
                       </div>
                     </div>
@@ -585,8 +631,13 @@ export default function QuoteSection() {
 
                   <div className={styles.stepActions}>
                     <button type="button" className="btn btn-outline" onClick={goPrev}>← Retour</button>
-                    <button type="submit" className="btn btn-primary" disabled={!form.brandName || !form.contactName || !form.email || !form.phone}>
-                      Transmettre le dossier
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={isSubmitting || !form.brandName || !form.contactName || !form.email || !form.phone}
+                      id="quote-submit"
+                    >
+                      {isSubmitting ? "Envoi en cours..." : "Transmettre le dossier"}
                     </button>
                   </div>
                 </div>
